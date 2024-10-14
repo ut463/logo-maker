@@ -5,17 +5,47 @@ const { writeFile } = require("fs/promises");
 
 class CLI {
   run() {
+    inquirer
+      .prompt([{
+        name: 'text',
+        message: 'what text would you like to display?',
+      },
+      {
+        name: 'textColor',
+        message: 'what color should the text be?',
+      },
+      {
+        type: 'list',
+        name: 'shapeType',
+        message: 'what shape would you like?',
+        choices: ['circle', 'triangle', 'square'],
+      },
+      {
+        name: 'shapeColor',
+        message: 'what color should the shape be?'
 
-    // TODO: Make an inquirer prompt to get text, textColor, shapeType, shapeColor data from user
+      }
+    ])
+    .then(answers => {
+      let shape;
+      if (answers.shapeType === 'circle') {
+          shape = new Circle(answers.text, answers.shapeColor, answers.textColor);
+      } else if (answers.shapeType === 'triangle') {
+          shape = new Triangle(answers.text, answers.shapeColor, answers.textColor);
+      } else {
+          shape = new Square(answers.text, answers.shapeColor, answers.textColor);
+      }
 
-    // TODO: Create a shape object based on inquirer data
+      const logo = shape.render();
+      writeFile('logo.svg', logo, (err) => {
+          if (err) {
+              console.log(err);
+          };
 
-    // TODO: Create a svg object and set text and textColor using user Data
+          console.log('logo.svg created');
+      })
 
-    // TODO: Set svg shape with shape object created above
-
-    // TODO: Write your svg file
-
+    });
   }
 }
 
